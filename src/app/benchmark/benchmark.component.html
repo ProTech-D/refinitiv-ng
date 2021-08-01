@@ -1,21 +1,32 @@
 <div class="has-text-weight-semibold">Search a company's ESG  Rating</div>
 
 <mat-form-field class="example-full-width w-100" appearance="fill">
-    <mat-label>First name</mat-label>
-    <input matInput>
+    <mat-label>Company name</mat-label>
+    <input matInput  [(ngModel)]="companyname"  (blur)="processChange()">
   </mat-form-field>
 
 
   <div class="has-text-weight-semibold">Filter by Industry</div>
   <mat-form-field appearance="fill" class="w-100">
-    <mat-label>Favorite food</mat-label>
-    <mat-select [(ngModel)]="selectedValue" name="food">
-      <mat-option *ngFor="let food of foods" [value]="food.value">
-        {{food.viewValue}}
+    <mat-label>Select Industry</mat-label>
+    <mat-select [(ngModel)]="industryID" name="food" (selectionChange)="filterIndustry($event.value)">
+      <mat-option value="0">None</mat-option>
+      <mat-option *ngFor="let inds of allindustries" [value]="inds.trbc">
+        {{inds.industry}}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
+  <div class="has-text-weight-semibold">Filter by Country</div>
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Select Country</mat-label>
+    <mat-select [(ngModel)]="countryID" name="food" (selectionChange)="filterCountry($event.value)">
+      <mat-option value="null">None</mat-option>
+      <mat-option *ngFor="let inds of allcountries" [value]="inds.country">
+        {{inds.country}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-100">
 
@@ -26,21 +37,30 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.instrument}} </td>
     </ng-container>
-  
+  <!-- Industry Column -->
+  <ng-container matColumnDef="industry">
+    <th mat-header-cell *matHeaderCellDef> Industry </th>
+    <td mat-cell *matCellDef="let element"> {{element.industry}} </td>
+  </ng-container>
+  <!-- country Column -->
+  <ng-container matColumnDef="country">
+    <th mat-header-cell *matHeaderCellDef> Country </th>
+    <td mat-cell *matCellDef="let element"> {{element.country}} </td>
+  </ng-container>
     <!-- Weight Column -->
     <ng-container matColumnDef="esg">
       <th mat-header-cell *matHeaderCellDef> ESG Score </th>
-      <td mat-cell *matCellDef="let element"> {{element.esg}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.esgscore}} </td>
     </ng-container>
-  
-  
     <ng-container matColumnDef="rank">
         <th mat-header-cell *matHeaderCellDef> Rank </th>
         <td mat-cell *matCellDef="let element"> 
-            <bar-rating [(rate)]="element.rank" [max]="4"   [showText]="true"
-     [titles]="['Bad', 'Mediocre' , 'Good', 'Awesome']"></bar-rating>
+          <div *ngIf=" element.esgscore <= 25"> Poor</div>
+          <div *ngIf=" element.esgscore > 25 && element.esgscore <= 50"> Satisfactory</div>
+          <div *ngIf=" element.esgscore > 50 && element.esgscore <= 75"> Good</div>
+          <div *ngIf=" element.esgscore > 75"> Excellent</div>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

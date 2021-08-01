@@ -1,31 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  esg: number;
-  rank: number;
-}
+
 export interface benchmark {
   id: number;
   instrument: string;
-  esg: number;
+  esgscore: number;
   industry: string;
+  country: string;
   trbc: number;
 }
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', esg: 1.0079, rank: 2},
-  {position: 2, name: 'Helium', esg: 4.0026, rank: 1},
-  {position: 3, name: 'Lithium', esg: 6.941, rank: 4},
-  {position: 4, name: 'Beryllium', esg: 9.0122, rank: 4},
-  {position: 5, name: 'Boron', esg: 10.811, rank: 3},
-  {position: 6, name: 'Carbon', esg: 12.0107, rank: 2},
-  {position: 7, name: 'Nitrogen', esg: 14.0067, rank: 4},
-  {position: 8, name: 'Oxygen', esg: 75.9994, rank: 2},
-  {position: 9, name: 'Fluorine', esg: 18.9984, rank: 3},
-  {position: 10, name: 'Neon', esg: 20.1797, rank: 1},
-];
+export interface industry {
+  trbc: number;
+  industry: string;
+}
+export interface countries {
+  country: string;
+}
 
 import { DetailComponent } from './detail/detail.component';
 @Component({
@@ -36,38 +28,101 @@ import { DetailComponent } from './detail/detail.component';
 export class BenchmarkComponent implements OnInit {
 
   selectedValue: string = '';
-  displayedColumns: string[] = [ 'name', 'esg', 'rank'];
-  dataSource = ELEMENT_DATA;
-  constructor(public dialog: MatDialog) { }
+  displayedColumns: string[] = ['name', 'industry','country', 'esg', 'rank'];
+  dataSource : benchmark[] = [];
+  allindustries : industry[] = [];
+  allcountries : countries[] = [];
+  baseUrl = 'http://refinitiv.test/api/';
+  industryID: number = 0;
+  countryID: string ='null';
+  companyname: string ='';
+
+  constructor(public dialog: MatDialog,private http: HttpClient) { }
   ngOnInit(): void {
+    this.getBenchmark();
+    this.getIndustries();
+    this.getCountries();
   }
-  
-  foods: any[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
-  ];
+  getBenchmark() {
+    this.http.get<any[]>(this.baseUrl+'all').subscribe(
+      (response) => {                           //Next callback
+        this.dataSource = response;
+      },
+      (error) => {                              //Error callback
+        console.error('Request failed with error')
+      },
+      () => {                                   //Complete callback
+      })
+  }
+  getIndustries() {
+    this.http.get<any[]>(this.baseUrl+'industry').subscribe(
+      (response) => {                           //Next callback
+        this.allindustries = response;
+      },
+      (error) => {                              //Error callback
+        console.error('Request failed with error')
+      },
+      () => {                                   //Complete callback
+      })
+  }
+  getCountries() {
+    this.http.get<any[]>(this.baseUrl+'countries').subscribe(
+      (response) => {                           //Next callback
+        this.allcountries = response;
+      },
+      (error) => {                              //Error callback
+        console.error('Request failed with error')
+      },
+      () => {                                   //Complete callback
+      })
+  }
    sorter = (a:any, b:any) => {
-    return   b.esg - a.esg;
+    return   b.esgscore - a.esgscore;
   };
   sortByESG = (arr:any[]) => {
     arr.sort(this.sorter);
  };
   getRecord(dt: any) {
-    this.sortByESG(ELEMENT_DATA);
-    console.log(ELEMENT_DATA);
-    const index = ELEMENT_DATA.findIndex(x => x.position === dt.position);
-    console.log(index);
+    this.sortByESG(this.dataSource);
+    const index = this.dataSource.findIndex(x => x.id === dt.id);
     dt.rank = index + 1;
-    dt.totalrank = ELEMENT_DATA.length;
+    dt.totalrank = this.dataSource.length;
     const dialogRef = this.dialog.open(DetailComponent,{
       width: '950px',
       data: dt
     });
+  }
+  filterIndustry(val: number) {
+    this.industryID = val;
+    this.filter();
+   
+  }
+  filterCountry(val: string) {
+    this.countryID = val;
+    this.filter();
+  }
+  processChange(){
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-    console.log(dt);
+    this.filter();
+ 
+ }
+  filter() {
+    this.dataSource = [];
+    let compname;
+    if (this.companyname && this.companyname != '') {
+       compname = this.companyname;
+    }
+    else {
+       compname = 0;
+    }
+    this.http.get<any[]>(this.baseUrl+'filter/' + this.industryID + '/' + this.countryID+ '/' + compname ).subscribe(
+      (response) => {                           //Next callback
+        this.dataSource = response;
+      },
+      (error) => {                              //Error callback
+        console.error('Request failed with error')
+      },
+      () => {                                   //Complete callback
+      })
   }
 }
