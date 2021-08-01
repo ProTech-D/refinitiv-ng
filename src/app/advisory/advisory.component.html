@@ -1,0 +1,87 @@
+<form class="example-form w-100">
+    <mat-form-field class="example-full-width w-100" appearance="fill">
+      <mat-label>Company</mat-label>
+      <input type="text"
+             placeholder="Pick one"
+             aria-label="Number"
+             matInput
+             [formControl]="myControl"
+             [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="filterCompany($event.option.value)">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+
+  <section *ngIf="selectedCompany">
+    <div class="notification is-danger" [ngClass]="{'is-danger': selectedCompany.esgscores <= 25, 'is-warning' : selectedCompany.esgscores > 25  && selectedCompany.esgscores <= 50 , 'is-success' : selectedCompany.esgscores > 50  && selectedCompany.esgscores <= 75 , 'is-info' : selectedCompany.esgscores > 75 }">
+        <span class="is-pulled-left">{{selectedCompany.name}}</span>
+        <span class="  is-pulled-right" >&nbsp; || &nbsp;{{selectedCompany.country}}</span>
+        <span class="  is-pulled-right" > {{selectedCompany.industry}}</span>
+        <br/> <br/>
+        <span class="has-text-weight-bold is-size-3" > {{selectedCompany.esgscores}}</span>
+        
+    </div>
+    <table class="table table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th><abbr title="Position">Category</abbr></th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th colspan =2 class="is-size-5 has-text-centered">Environmental</th>
+        </tr>
+        <tr [ngClass]="{'has-background-danger-light': selectedCompany.emission <= 25, 'has-background-warning-light' : selectedCompany.emission > 25  && selectedCompany.emission <= 50 , 'has-background-success-light' : selectedCompany.emission > 50  && selectedCompany.emission <= 75 , 'has-background-info-light' : selectedCompany.emission > 75 }">
+            <th>Emmission</th>
+            <td>{{selectedCompany.emission}}</td>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.innovation <= 25, 'has-background-warning-light' : selectedCompany.innovation > 25  && selectedCompany.innovation <= 50 , 'has-background-success-light' : selectedCompany.innovation > 50  && selectedCompany.innovation <= 75 , 'has-background-info-light' : selectedCompany.innovation > 75 }">
+            <th>Innovation</th>
+            <td>{{selectedCompany.innovation}}</td>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.resourceuse <= 25, 'has-background-warning-light' : selectedCompany.resourceuse > 25  && selectedCompany.resourceuse <= 50 , 'has-background-success-light' : selectedCompany.resourceuse > 50  && selectedCompany.resourceuse <= 75 , 'has-background-info-light' : selectedCompany.resourceuse > 75 }">
+            <th>Resource use</th>
+            <td>{{selectedCompany.resourceuse}}</td>
+          </tr>
+          <tr>
+            <th colspan =2 class="is-size-5 has-text-centered">Governance</th>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.csrstrategy <= 25, 'has-background-warning-light' : selectedCompany.csrstrategy > 25  && selectedCompany.csrstrategy <= 50 , 'has-background-success-light' : selectedCompany.csrstrategy > 50  && selectedCompany.csrstrategy <= 75 , 'has-background-info-light' : selectedCompany.csrstrategy > 75 }">
+            <th>CSR strategy</th>
+            <td>{{selectedCompany.csrstrategy}}</td>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.management <= 25, 'has-background-warning-light' : selectedCompany.management > 25  && selectedCompany.management <= 50 , 'has-background-success-light' : selectedCompany.management > 50  && selectedCompany.management <= 75 , 'has-background-info-light' : selectedCompany.management > 75 }">
+            <th>Management</th>
+            <td>{{selectedCompany.management}}</td>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.Shareholders <= 25, 'has-background-warning-light' : selectedCompany.Shareholders > 25  && selectedCompany.Shareholders <= 50 , 'has-background-success-light' : selectedCompany.Shareholders > 50  && selectedCompany.Shareholders <= 75 , 'has-background-info-light' : selectedCompany.Shareholders > 75 }" >
+            <th>Shareholders</th>
+            <td>{{selectedCompany.Shareholders}}</td>
+          </tr>
+          <tr>
+            <th colspan =2 class="is-size-5 has-text-centered">Social</th>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.community <= 25, 'has-background-warning-light' : selectedCompany.community > 25  && selectedCompany.community <= 50 , 'has-background-success-light' : selectedCompany.community > 50  && selectedCompany.community <= 75 , 'has-background-info-light' : selectedCompany.community > 75 }">
+            <th>Community</th>
+            <td>{{selectedCompany.community}}</td>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.humanrights <= 25, 'has-background-warning-light' : selectedCompany.humanrights > 25  && selectedCompany.humanrights <= 50 , 'has-background-success-light' : selectedCompany.humanrights > 50  && selectedCompany.humanrights <= 75 , 'has-background-info-light' : selectedCompany.humanrights > 75 }">
+            <th>Human rights</th>
+            <td>{{selectedCompany.humanrights}}</td>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.productresponsibility <= 25, 'has-background-warning-light' : selectedCompany.productresponsibility > 25  && selectedCompany.productresponsibility <= 50 , 'has-background-success-light' : selectedCompany.productresponsibility > 50  && selectedCompany.productresponsibility <= 75 , 'has-background-info-light' : selectedCompany.productresponsibility > 75 }">
+            <th>Product responsibility</th>
+            <td>{{selectedCompany.productresponsibility}}</td>
+          </tr>
+          <tr [ngClass]="{'has-background-danger-light': selectedCompany.Workforce <= 25, 'has-background-warning-light' : selectedCompany.Workforce > 25  && selectedCompany.Workforce <= 50 , 'has-background-success-light' : selectedCompany.Workforce > 50  && selectedCompany.Workforce <= 75 , 'has-background-info-light' : selectedCompany.Workforce > 75 }">
+            <th>Workforce</th>
+            <td>{{selectedCompany.Workforce}}</td>
+          </tr>
+          </tbody>
+          </table>
+
+  </section>

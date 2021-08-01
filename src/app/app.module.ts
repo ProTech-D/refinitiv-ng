@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing-modules';
 import { AppComponent } from './app.component';
 import { BenchmarkComponent } from './benchmark/benchmark.component';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormsModule , ReactiveFormsModule  } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
@@ -14,17 +14,21 @@ import { BarRatingModule } from "ngx-bar-rating";
 import { DetailComponent } from './benchmark/detail/detail.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
+import { AdvisoryComponent } from './advisory/advisory.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 @NgModule({
   declarations: [
     AppComponent,
     BenchmarkComponent,
-    DetailComponent
+    DetailComponent,
+    AdvisoryComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     MatInputModule,
     FormsModule,
+    ReactiveFormsModule,
     MatIconModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
@@ -32,7 +36,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatTableModule,
     BarRatingModule,
     MatDialogModule,
-    HttpClientModule
+    HttpClientModule,
+    MatAutocompleteModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
