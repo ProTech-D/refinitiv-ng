@@ -1,0 +1,32 @@
+<article class="message is-info">
+    <div class="message-header">
+      <p>{{data.name}}</p>
+    </div>
+    <div class="message-body">
+
+        <div class="columns">
+            <div class="column is-three-quarters">
+               
+                <div class="has-text-weight-semibold"> ESG Risk Rating</div>
+                <div class="has-text-centered is-size-3 has-text-weight-bold mt-4">
+                    {{data.esg}}
+                </div>
+                <div class="columns mt-4">
+                    <div [ngClass]="{'has-background-info-dark': data.esg <= 25 }" class="has-text-centered column has-background-info-light border1px has-text-black"> Poor</div>
+                    <div [ngClass]="{'has-background-info-dark': data.esg > 25 && data.esg <= 50}" class="has-text-centered column has-background-info-light border1px has-text-black">Satisfactory</div>
+                    <div [ngClass]="{'has-background-info-dark': data.esg > 50 && data.esg <= 75}" class="has-text-centered column has-background-info-light border1px  has-text-black">Good</div>
+                    <div [ngClass]="{'has-background-info-dark':  data.esg > 75 }" class="has-text-centered column has-background-info-light border1px has-text-black"> Excellent </div>
+
+                </div>
+            </div>
+            <div class="column">
+                <div class="has-text-weight-semibold"> Ranking</div>
+                <div class="">
+
+                </div>
+            </div>
+          
+          </div>
+
+    </div>
+  </article>
