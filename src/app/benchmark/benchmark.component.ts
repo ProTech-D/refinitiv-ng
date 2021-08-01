@@ -7,7 +7,13 @@ export interface PeriodicElement {
   esg: number;
   rank: number;
 }
-
+export interface benchmark {
+  id: number;
+  instrument: string;
+  esg: number;
+  industry: string;
+  trbc: number;
+}
 const ELEMENT_DATA: PeriodicElement[] = [
   {position: 1, name: 'Hydrogen', esg: 1.0079, rank: 2},
   {position: 2, name: 'Helium', esg: 4.0026, rank: 1},
@@ -41,7 +47,19 @@ export class BenchmarkComponent implements OnInit {
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos'}
   ];
+   sorter = (a:any, b:any) => {
+    return   b.esg - a.esg;
+  };
+  sortByESG = (arr:any[]) => {
+    arr.sort(this.sorter);
+ };
   getRecord(dt: any) {
+    this.sortByESG(ELEMENT_DATA);
+    console.log(ELEMENT_DATA);
+    const index = ELEMENT_DATA.findIndex(x => x.position === dt.position);
+    console.log(index);
+    dt.rank = index + 1;
+    dt.totalrank = ELEMENT_DATA.length;
     const dialogRef = this.dialog.open(DetailComponent,{
       width: '950px',
       data: dt
